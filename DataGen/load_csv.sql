@@ -1,0 +1,2 @@
+LOAD DATA INFILE 'names.csv' INTO TABLE datagen.names FIELDS TERMINATED BY ',' enclosed by '"' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS;
+LOAD DATA INFILE 'addresses.csv' INTO TABLE datagen.addresses FIELDS TERMINATED BY ',' enclosed by '"' LINES TERMINATED BY '\r\n' IGNORE 1 ROWS;

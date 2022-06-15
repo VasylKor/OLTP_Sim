@@ -7,7 +7,7 @@ config.read(configFilePath)
 
 db_gen = config.get('VARS', 'db_gen')
 db_oltp = config.get('VARS', 'db_oltp')
-cust_per_month = config.get('VARS', 'cust_per_month')
+cust_per_month = int(config.get('VARS', 'cust_per_month'))
 user= config.get('VARS', 'user')
 password= config.get('VARS', 'password')
 host= config.get('VARS', 'host')

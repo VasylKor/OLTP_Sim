@@ -1,5 +1,15 @@
 from funcs import *
 import configparser
+import logging
+
+logging.basicConfig(filename='logs',
+                    filemode='a',
+                    format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
+                    datefmt='%H:%M:%S',
+                    level=logging.DEBUG)
+
+logging.info("Importing buys")
+
 
 config= configparser.RawConfigParser()   
 configFilePath = r'config.txt'
@@ -55,6 +65,8 @@ buy_times = buy_times.reset_index()
 
 last_shift = now.replace(hour=21, minute=0, second=0)
 
+logging.info("Starting OLTP")
+
 # Stop the script run at last shift
 # or when the last transaction occur
 while datetime.now() < last_shift:
@@ -65,3 +77,5 @@ while datetime.now() < last_shift:
         buy_times = buy_times[buy_times['index'] != idx]  
     elif buy_times.shape[0] == 0:
         break
+        
+logging.info("Closing OLTP")

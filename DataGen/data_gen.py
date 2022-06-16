@@ -21,7 +21,7 @@ cust_per_month = int(config.get('VARS', 'cust_per_month'))
 user= config.get('VARS', 'user')
 password= config.get('VARS', 'password')
 host= config.get('VARS', 'host')
-port= config.get('VARS', 'port')
+port= int(config.get('VARS', 'port'))
 
 
 
@@ -72,7 +72,7 @@ logging.info("Starting OLTP")
 while datetime.now() < last_shift:
     to_process = buy_times.loc[buy_times['times'] < now]
     if to_process.shape[0] != 0:
-        generate_receipts(db_gen, db_oltp)
+        generate_receipts(user, password, host, port, db_gen, db_oltp)
         idx = to_process.iloc[0,:]['index']
         buy_times = buy_times[buy_times['index'] != idx]  
     elif buy_times.shape[0] == 0:

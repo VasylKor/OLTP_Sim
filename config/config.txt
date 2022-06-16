@@ -1,6 +1,6 @@
 [VARS]
 db_gen =
-db_oltp =
+db_oltp = 
 cust_per_month = 40000
 user=
 password=

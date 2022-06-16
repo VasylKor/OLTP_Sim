@@ -1,8 +1,16 @@
 from funcs import *
 import configparser
 import logging
+import os
+import sys
 
-logging.basicConfig(filename='logs',
+# Setting folder as working directory          
+pathname = os.path.dirname(os.path.abspath(__file__))
+os.chdir(pathname)
+
+
+
+logging.basicConfig(filename="../logs/logs.log",
                     filemode='a',
                     format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
                     datefmt='%H:%M:%S',
@@ -10,18 +18,19 @@ logging.basicConfig(filename='logs',
 
 logging.info("Importing buys")
 
+config = configparser.ConfigParser()
+config.read("../config/config.txt")
 
-config= configparser.RawConfigParser()   
-configFilePath = r'config.txt'
-config.read(configFilePath)
+params = config["VARS"]
+ 
 
-db_gen = config.get('VARS', 'db_gen')
-db_oltp = config.get('VARS', 'db_oltp')
-cust_per_month = int(config.get('VARS', 'cust_per_month'))
-user= config.get('VARS', 'user')
-password= config.get('VARS', 'password')
-host= config.get('VARS', 'host')
-port= int(config.get('VARS', 'port'))
+db_gen = params["db_gen"]
+db_oltp = params["db_oltp"]
+cust_per_month = int(params["cust_per_month"])
+user= params["user"]
+password= params["password"]
+host= params["host"]
+port= int(params["port"])
 
 
 
@@ -70,12 +79,12 @@ logging.info("Starting OLTP")
 # Stop the script run at last shift
 # or when the last transaction occur
 while datetime.now() < last_shift:
-    to_process = buy_times.loc[buy_times['times'] < now]
+    to_process = buy_times.loc[buy_times['times'] < datetime.now()]
     if to_process.shape[0] != 0:
         generate_receipts(user, password, host, port, db_gen, db_oltp)
         idx = to_process.iloc[0,:]['index']
         buy_times = buy_times[buy_times['index'] != idx]  
     elif buy_times.shape[0] == 0:
         break
-        
+
 logging.info("Closing OLTP")

@@ -119,9 +119,6 @@ def generate_receipts(user, pwd, host, port, db_gen, db_oltp):
 
     receipt_id = str(uuid.uuid4())
 
-    from scipy.stats import skewnorm
-    import matplotlib.pyplot as plt
-
     # Getting number of things bought
 
     num_values = 10000

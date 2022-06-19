@@ -305,7 +305,7 @@ def buyers_distr_weekend(buyers_num):
 
     rndm.sort()
 
-    pd.DataFrame(rndm).value_counts().sort_index()
+    output = pd.DataFrame(rndm).value_counts().sort_index()
     output = output.rename('count', inplace=True)
     output = output.reset_index()
     output = output.rename(columns={0:'time'})

@@ -9,6 +9,83 @@ import random
 from datetime import datetime
 import uuid
 import sys
+import subprocess
+
+
+def check_machines(hostnames, logging=None):
+    '''
+    Takes as input list of
+    hostnames. Return the first
+    server in the list which is up.
+    Takes optionally a logging object for
+    ... logging. 
+    '''
+    
+    if logging:
+        
+        for host in hostnames:
+            response = subprocess.run(["ping", "-c", "1", host]).returncode   
+            if response == 0:
+                logging.info(f'{host} is up!')
+                return host
+                break
+            else:
+                logging.info(f'{host} is up!')
+    
+    else:
+        
+        for host in hostnames:
+            response = subprocess.run(["ping", "-c", "1", host]).returncode   
+            if response == 0:
+                return host
+                break
+           
+
+def import_day_purchases(cust_per_month):
+    '''
+    Takes number of customers per motnh as input.
+    Returns list of hours at which purchases
+    will take place during the day.
+    '''
+
+    cust_per_week = int(cust_per_month/7)
+    cust_per_day_week = int((cust_per_week * 0.6) / 5)
+    cust_per_day_weekend = int((cust_per_week * 0.4) / 2)
+
+    # getting current datetime
+    now = datetime.now()
+
+    # getting number of buys per hour today
+    if now.weekday() in [0,1,2,3,4]:
+        buys = buyers_distr_week(cust_per_day_week)
+    else:
+        buys = buyers_distr_weekend(cust_per_day_weekend)
+        
+    # Obtaining list of timestamps from 
+    # number of buys per day distribuition.
+    # Linking times to today's date
+    buys = buys.loc[buys['count'] <2]
+    buys_times = np.array(buys['time'])
+
+    hours = buys_times
+    minutes = hours%1
+    hours = list((hours-minutes).astype(int))
+    minutes = minutes*60
+    seconds = minutes%1
+    minutes = list((minutes-seconds).astype(int))
+    seconds = list((seconds*60).astype(int))
+
+    buy_times = []
+    for i in range (len(hours)):
+        new_time=now.replace(hour=hours[i], minute=minutes[i], second=seconds[i])
+        buy_times.append(new_time)
+
+
+    buy_times = pd.Series(buy_times, name = 'times')
+    buy_times = buy_times.reset_index()
+    
+    return buy_times
+
 
 
 def generate_customers(user, pwd, host, port, db_gen, db_oltp):
@@ -118,6 +195,7 @@ def generate_receipts(user, pwd, host, port, db_gen, db_oltp):
     cur = conn.cursor()
 
     receipt_id = str(uuid.uuid4())
+
 
     # Getting number of things bought
 

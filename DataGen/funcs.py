@@ -18,7 +18,7 @@ def check_machines(hostnames, logging=None):
     hostnames. Return the first
     server in the list which is up.
     Takes optionally a logging object for
-    ... logging. 
+    .... logging. 
     '''
     
     if logging:
@@ -232,6 +232,8 @@ def generate_receipts(user, pwd, host, port, db_gen, db_oltp):
     cur.execute(f"SELECT Id FROM {db_oltp}.customers")
     customers = cur.fetchall()
 
+    # Just deciding if buying customer is 
+    # registered or not
     exec_code= random.randint(0,4)
     if exec_code == 0 or exec_code == 3:
         customer_id=-1

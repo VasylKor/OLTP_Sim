@@ -305,7 +305,7 @@ def generate_receipts(user, pwd, host, port, db_gen, db_oltp):
             query = f"""
                     insert into {db_oltp}.receipt_lines (receipt_id, product_id, qty, single_price, barcode, TIMESTAMP)
                     VALUES 
-                    ('{row['receipt_id']}','{row['product_id']}',{row['qty']},{row['price']},{row['barcode']})
+                    ('{row['receipt_id']}','{row['product_id']}',{row['qty']},{row['price']},{row['barcode']},CURRENT_TIMESTAMP())
             """
             cur.execute(query)
         
